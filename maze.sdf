@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+    <world name="complex_maze_large">
+        <physics name="1ms" type="ignored">
+            <max_step_size>0.001</max_step_size>
+            <real_time_factor>1.0</real_time_factor>
+        </physics>
+        <plugin name="gz::sim::systems::Physics" filename="gz-sim-physics-system"/>
+        <plugin name="gz::sim::systems::UserCommands" filename="gz-sim-user-commands-system"/>
+        <plugin name="gz::sim::systems::SceneBroadcaster" filename="gz-sim-scene-broadcaster-system"/>
+
+        <light type="directional" name="sun">
+            <pose>0 0 20 0 0 0</pose>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.2 0.2 0.2 1</specular>
+            <direction>-0.5 0.1 -0.9</direction>
+        </light>
+
+        <model name="ground_plane">
+            <static>true</static>
+            <link name="link">
+                <collision name="c"><geometry><plane><normal>0 0 1</normal></plane></geometry></collision>
+                <visual name="v"><geometry><plane><normal>0 0 1</normal></plane></geometry>
+                <material><ambient>0.8 0.8 0.8 1</ambient><diffuse>0.8 0.8 0.8 1</diffuse></material></visual>
+            </link>
+        </model>
+
+        <model name="border_N">
+            <static>true</static><pose>0 10 2.5 0 0 0</pose>
+            <link name="l">
+                <visual name="v"><geometry><box><size>20 0.4 5</size></box></geometry></visual>
+                <collision name="c"><geometry><box><size>20 0.4 5</size></box></geometry></collision>
+            </link>
+        </model>
+        <model name="border_S">
+            <static>true</static><pose>0 -10 2.5 0 0 0</pose>
+            <link name="l">
+                <visual name="v"><geometry><box><size>20 0.4 5</size></box></geometry></visual>
+                <collision name="c"><geometry><box><size>20 0.4 5</size></box></geometry></collision>
+            </link>
+        </model>
+        <model name="border_W">
+            <static>true</static><pose>-10 0 2.5 0 0 1.57</pose>
+            <link name="l">
+                <visual name="v"><geometry><box><size>20 0.4 5</size></box></geometry></visual>
+                <collision name="c"><geometry><box><size>20 0.4 5</size></box></geometry></collision>
+            </link>
+        </model>
+        <model name="border_E">
+            <static>true</static><pose>10 2.5 2.5 0 0 1.57</pose>
+            <link name="l">
+                <visual name="v"><geometry><box><size>15 0.4 5</size></box></geometry></visual>
+                <collision name="c"><geometry><box><size>20 0.4 5</size></box></geometry></collision>
+            </link>
+        </model>
+
+        <model name="w1"><static>true</static><pose>-5 6 1 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>10 0.3 2</size></box></geometry></visual><collision name="c"><geometry><box><size>10 0.3 5</size></box></geometry></collision></link></model>
+        <model name="w2"><static>true</static><pose>0 3 2.5 0 0 1.57</pose><link name="l"><visual name="v"><geometry><box><size>6 0.3 5</size></box></geometry></visual><collision name="c"><geometry><box><size>6 0.3 5</size></box></geometry></collision></link></model>
+        <model name="w3"><static>true</static><pose>4 6 2.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>8 0.3 5</size></box></geometry></visual><collision name="c"><geometry><box><size>8 0.3 5</size></box></geometry></collision></link></model>
+        <model name="w4"><static>true</static><pose>-5 -3 1.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>7 0.3 3</size></box></geometry></visual><collision name="c"><geometry><box><size>10 0.3 5</size></box></geometry></collision></link></model>
+        <model name="w5"><static>true</static><pose>0 -5 1 0 0 1.57</pose><link name="l"><visual name="v"><geometry><box><size>10 0.3 2</size></box></geometry></visual><collision name="c"><geometry><box><size>10 0.3 5</size></box></geometry></collision></link></model>
+        <model name="w6"><static>true</static><pose>5 -1 2.5 0 0 1.57</pose><link name="l"><visual name="v"><geometry><box><size>6 0.3 5</size></box></geometry></visual><collision name="c"><geometry><box><size>6 0.3 5</size></box></geometry></collision></link></model>
+        <model name="w7"><static>true</static><pose>7 -4 2.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>6 0.3 5</size></box></geometry></visual><collision name="c"><geometry><box><size>6 0.3 5</size></box></geometry></collision></link></model>
+
+    </world>
+</sdf>
