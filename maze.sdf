@@ -25,42 +25,31 @@
             </link>
         </model>
 
-        <model name="border_N">
-            <static>true</static><pose>0 10 2.5 0 0 0</pose>
-            <link name="l">
-                <visual name="v"><geometry><box><size>20 0.4 5</size></box></geometry></visual>
-                <collision name="c"><geometry><box><size>20 0.4 5</size></box></geometry></collision>
-            </link>
-        </model>
-        <model name="border_S">
-            <static>true</static><pose>0 -10 2.5 0 0 0</pose>
-            <link name="l">
-                <visual name="v"><geometry><box><size>20 0.4 5</size></box></geometry></visual>
-                <collision name="c"><geometry><box><size>20 0.4 5</size></box></geometry></collision>
-            </link>
-        </model>
-        <model name="border_W">
-            <static>true</static><pose>-10 0 2.5 0 0 1.57</pose>
-            <link name="l">
-                <visual name="v"><geometry><box><size>20 0.4 5</size></box></geometry></visual>
-                <collision name="c"><geometry><box><size>20 0.4 5</size></box></geometry></collision>
-            </link>
-        </model>
-        <model name="border_E">
-            <static>true</static><pose>10 2.5 2.5 0 0 1.57</pose>
-            <link name="l">
-                <visual name="v"><geometry><box><size>15 0.4 5</size></box></geometry></visual>
-                <collision name="c"><geometry><box><size>20 0.4 5</size></box></geometry></collision>
-            </link>
-        </model>
+        <model name="border_N"><static>true</static><pose>0 10 2.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>20 0.4 5</size></box></geometry></visual><collision name="c"><geometry><box><size>20 0.4 5</size></box></geometry></collision></link></model>
+        <model name="border_S"><static>true</static><pose>0 -10 2.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>20 0.4 5</size></box></geometry></visual><collision name="c"><geometry><box><size>20 0.4 5</size></box></geometry></collision></link></model>
+        <model name="border_W"><static>true</static><pose>-10 0 2.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>0.4 20 5</size></box></geometry></visual><collision name="c"><geometry><box><size>0.4 20 5</size></box></geometry></collision></link></model>
+        <model name="border_E"><static>true</static><pose>10 2.5 2.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>0.4 15 5</size></box></geometry></visual><collision name="c"><geometry><box><size>0.4 15 5</size></box></geometry></collision></link></model>
 
-        <model name="w1"><static>true</static><pose>-5 6 1 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>10 0.3 2</size></box></geometry></visual><collision name="c"><geometry><box><size>10 0.3 5</size></box></geometry></collision></link></model>
-        <model name="w2"><static>true</static><pose>0 3 2.5 0 0 1.57</pose><link name="l"><visual name="v"><geometry><box><size>6 0.3 5</size></box></geometry></visual><collision name="c"><geometry><box><size>6 0.3 5</size></box></geometry></collision></link></model>
-        <model name="w3"><static>true</static><pose>4 6 2.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>8 0.3 5</size></box></geometry></visual><collision name="c"><geometry><box><size>8 0.3 5</size></box></geometry></collision></link></model>
-        <model name="w4"><static>true</static><pose>-5 -3 1.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>7 0.3 3</size></box></geometry></visual><collision name="c"><geometry><box><size>10 0.3 5</size></box></geometry></collision></link></model>
-        <model name="w5"><static>true</static><pose>0 -5 1 0 0 1.57</pose><link name="l"><visual name="v"><geometry><box><size>10 0.3 2</size></box></geometry></visual><collision name="c"><geometry><box><size>10 0.3 5</size></box></geometry></collision></link></model>
-        <model name="w6"><static>true</static><pose>5 -1 2.5 0 0 1.57</pose><link name="l"><visual name="v"><geometry><box><size>6 0.3 5</size></box></geometry></visual><collision name="c"><geometry><box><size>6 0.3 5</size></box></geometry></collision></link></model>
-        <model name="w7"><static>true</static><pose>7 -4 2.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>6 0.3 5</size></box></geometry></visual><collision name="c"><geometry><box><size>6 0.3 5</size></box></geometry></collision></link></model>
+        <model name="wall_v1"><static>true</static><pose>-6 2 2.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>0.3 12 5</size></box></geometry></visual><collision name="c"><geometry><box><size>0.3 12 5</size></box></geometry></collision></link></model>
+        <model name="wall_v2"><static>true</static><pose>-2 -7 2.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>0.3 6 2</size></box></geometry></visual><collision name="c"><geometry><box><size>0.3 6 5</size></box></geometry></collision></link></model>
+        <model name="wall_v3"><static>true</static><pose>6 0 2.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>0.3 14 5</size></box></geometry></visual><collision name="c"><geometry><box><size>0.3 14 5</size></box></geometry></collision></link></model>
+
+        <model name="wall_h1"><static>true</static><pose>-1.5 7 1 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>9 0.3 2</size></box></geometry></visual><collision name="c"><geometry><box><size>12 0.3 5</size></box></geometry></collision></link></model>
+        <model name="wall_h2"><static>true</static><pose>-1.5 -4 1 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>6 0.3 5</size></box></geometry></visual><collision name="c"><geometry><box><size>8 0.3 5</size></box></geometry></collision></link></model>
+        <model name="wall_h3"><static>true</static><pose>8.5 -2 2.5 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>2 0.3 2</size></box></geometry></visual><collision name="c"><geometry><box><size>4 0.3 5</size></box></geometry></collision></link></model>
+
+        <model name="narrow_path_N"><static>true</static><pose>4 2.4 1 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>4 0.3 2</size></box></geometry></visual><collision name="c"><geometry><box><size>4 0.3 2</size></box></geometry></collision></link></model>
+        <model name="narrow_path_S"><static>true</static><pose>4 1.6 1 0 0 0</pose><link name="l"><visual name="v"><geometry><box><size>4 0.3 2</size></box></geometry></visual><collision name="c"><geometry><box><size>4 0.3 2</size></box></geometry></collision></link></model>
+
+        <model name="green_survivor_1"><static>true</static><pose>-8 -8 0.5 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.8 0.8 1.0</size></box></geometry><material><ambient>0 1 0 1</ambient><diffuse>0 1 0 1</diffuse></material></visual><collision name="c"><geometry><box><size>0.8 0.8 1.0</size></box></geometry></collision></link></model>
+        
+        <model name="green_survivor_2"><static>true</static><pose>0 8.5 0.5 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.8 0.8 1.0</size></box></geometry><material><ambient>0 1 0 1</ambient><diffuse>0 1 0 1</diffuse></material></visual><collision name="c"><geometry><box><size>0.8 0.8 1.0</size></box></geometry></collision></link></model>
+
+        <model name="green_survivor_3"><static>true</static><pose>8 2 0.5 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.8 0.8 1.0</size></box></geometry><material><ambient>0 1 0 1</ambient><diffuse>0 1 0 1</diffuse></material></visual><collision name="c"><geometry><box><size>0.8 0.8 1.0</size></box></geometry></collision></link></model>
+
+        <model name="red_danger1"><static>true</static><pose>-4 5 0.5 0 0 0</pose><link name="link"><visual name="v"><geometry><cylinder><radius>0.4</radius><length>1.0</length></cylinder></geometry><material><ambient>1 0 0 1</ambient><diffuse>1 0 0 1</diffuse></material></visual><collision name="c"><geometry><cylinder><radius>0.4</radius><length>1.0</length></cylinder></geometry></collision></link></model>
+        <model name="red_danger2"><static>true</static><pose>-7.8 8 0.5 0 0 0</pose><link name="link"><visual name="v"><geometry><cylinder><radius>0.73</radius><length>1.0</length></cylinder></geometry><material><ambient>1 0 0 1</ambient><diffuse>1 0 0 1</diffuse></material></visual><collision name="c"><geometry><cylinder><radius>0.9</radius><length>1.0</length></cylinder></geometry></collision></link></model>
+
 
     </world>
 </sdf>
