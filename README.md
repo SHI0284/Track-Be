@@ -170,9 +170,9 @@ SLAM, Navigation, Path Planning 등의 로봇 기술을 실제 재난 구조 분
 | 이름  | 역할                              |
 | --- | ------------------------------- |
 | 서혜인 | 안전 경로 탐색 알고리즘, A* Path Planning |
-| 팀원  | Gazebo 환경 및 맵 제작                |
-| 팀원  | TurtleBot3 Navigation 및 ROS2 통합 |
-| 팀원  | 객체 탐지 및 위험 지역 처리                |
+| 정범우 | Gazebo 환경 및 맵 제작                |
+| 서은비 | TurtleBot3 Navigation 및 ROS2 통합 |
+| 박다영 | 객체 탐지 및 위험 지역 처리                |
 
 ---
 
