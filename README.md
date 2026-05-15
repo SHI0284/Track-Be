@@ -187,8 +187,14 @@ SLAM, Navigation, Path Planning 등의 로봇 기술을 실제 재난 구조 분
 
 ---
 
+
+
 # 🌌 Vision
 
 Track‑Be는 단순한 로봇 시뮬레이션 프로젝트를 넘어, 실제 재난 구조 상황에서 활용 가능한 안전 경로 유도 시스템을 목표로 합니다.
 
 향후에는 화재 탐지, 객체 인식, 다중 로봇 협업, 실시간 센서 데이터 처리 등을 추가하여 보다 지능적인 재난 대응 로봇 플랫폼으로 확장할 계획입니다.
+
+# 📄 Project Documents
+
+[![PDF](https://img.shields.io/badge/PDF-Project_Document-red?style=for-the-badge&logo=adobeacrobatreader)](docs/TrackBe_Proposal.pdf)
