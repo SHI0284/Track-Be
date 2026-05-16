@@ -1,8 +1,11 @@
 import heapq
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 GRID_SIZE = 20
-SDF_PATH = "../maze.sdf"
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+SDF_PATH = BASE_DIR / "maze.sdf"
 
 robot_start = (0, 0)
 exit_pos = (9, 9)
