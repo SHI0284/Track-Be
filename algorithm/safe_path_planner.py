@@ -10,7 +10,6 @@ SDF_PATH = BASE_DIR / "maze.sdf"
 robot_start = (0, 0)
 exit_pos = (9, 9)
 
-obstacles = set()
 
 
 def world_to_grid(x, y):
@@ -43,6 +42,35 @@ def read_color_from_model(model):
                 return "green"
 
     return "unknown"
+
+def load_walls_from_sdf(sdf_path):
+    wall_points = set()
+
+    tree = ET.parse(sdf_path)
+    root = tree.getroot()
+
+    for model in root.iter("model"):
+        model_name = model.attrib.get("name", "").lower()
+
+        # wall, box, obstacle 이름 가진 모델만 벽으로 판단
+        if "wall" not in model_name and "box" not in model_name and "obstacle" not in model_name:
+            continue
+
+        pose = model.find("pose")
+        if pose is None or pose.text is None:
+            continue
+
+        pose_values = pose.text.strip().split()
+        if len(pose_values) < 2:
+            continue
+
+        x = float(pose_values[0])
+        y = float(pose_values[1])
+
+        grid_pos = world_to_grid(x, y)
+        wall_points.add(grid_pos)
+
+    return wall_points
 
 
 def load_points_from_sdf(sdf_path):
@@ -79,7 +107,7 @@ def load_points_from_sdf(sdf_path):
 
     return danger_points, people_points
 
-
+obstacles = load_walls_from_sdf(SDF_PATH)
 danger_points, people_points = load_points_from_sdf(SDF_PATH)
 
 if len(people_points) > 0:
@@ -202,6 +230,9 @@ def main():
     print("\nLoaded people points from green cylinders:")
     print(people_points)
 
+    print("\nLoaded wall points:")
+    print(obstacles)
+
     print("\nSelected person position:")
     print(person_pos)
 
@@ -211,6 +242,7 @@ def main():
 
     print("\nMarked safe points:")
     print(safe_points)
+
 
     print("\nFinding path: Robot -> Person")
     path_to_person = find_escape_path(robot_start, person_pos)
