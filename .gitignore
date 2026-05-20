@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ROS2 / colcon build outputs
+build/
+install/
+log/
+
+# generated keepout files
+maps/danger_keepout_mask.pgm
+maps/danger_keepout_mask.yaml
+config/nav2_keepout_params.yaml
+config/keepout_servers.yaml
+
+# editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# temporary files
+*.tmp
+*.bak
+*.swp
