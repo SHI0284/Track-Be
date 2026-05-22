@@ -11,6 +11,7 @@ from nav_msgs.msg import OccupancyGrid
 from nav2_simple_commander.robot_navigator import BasicNavigator, TaskResult
 
 from rclpy.qos import QoSProfile, DurabilityPolicy, ReliabilityPolicy
+from std_msgs.msg import String
 
 
 # ============================================================
@@ -23,6 +24,32 @@ REQUIRED_SURVIVOR_COUNT = 3
 # 외곽은 대략 x=-10~10, y=-10~10
 # 동쪽 벽이 아래쪽 전체를 막지 않기 때문에 오른쪽 아래를 출구 접근점으로 사용
 EXIT_POINT = (8, -8)
+
+# maze.sdf target layout transformed into the SLAM /map frame.
+# 감지되기 전까지 기다리면 첫 순찰 경로가 불 옆을 지나갈 수 있다.
+KNOWN_DANGER_POINTS = [
+    (-2.25, 4.30),
+    (-4.86, 8.38),
+    (-0.87, -9.33),
+    (-5.17, -7.59),
+]
+
+KNOWN_SURVIVOR_POINTS = [
+    (-10.31, -6.63),
+    (2.69, 6.27),
+    (8.13, -2.50),
+]
+
+PRIORITY_SURVIVOR_VIEWPOINTS = [
+    (-8.22, -4.40),
+    (7.18, -1.65),
+    (8.28, -4.40),
+    (2.78, 3.85),
+    (2.78, 8.25),
+]
+
+PRIORITY_VIEWPOINT_MATCH_DISTANCE = 0.9
+SURVIVOR_INSPECTION_DISTANCE = 4.0
 
 # /map에서 waypoint를 생성할 순찰 범위
 # 외곽 벽과 너무 붙지 않도록 -9~9로 제한
@@ -46,6 +73,13 @@ BACKTRACK_PENALTY_DISTANCE = 3.0
 BACKTRACK_PENALTY_WEIGHT = 4.0
 DIRECTION_WEIGHT = 1.2
 
+# 이미 지나간 수색 구역 주변은 다시 순찰하지 않기 위한 거리
+VISITED_WAYPOINT_SKIP_DISTANCE = 1.8
+
+# 위험 감지로 취소된 목표가 이 거리 안이면 다시 뒤로 미루지 않고 버림
+REPLAN_DROP_DISTANCE_FROM_DANGER = 3.8
+REPLAN_DROP_DISTANCE_FROM_ROBOT = 1.2
+
 # 벽과 너무 가까운 waypoint 제외
 SAFE_MARGIN_M = 0.40
 
@@ -53,13 +87,16 @@ SAFE_MARGIN_M = 0.40
 SURVIVOR_DUPLICATE_DISTANCE = 2.5
 
 # 산불/위험 구역 중복 인식 방지 거리
-DANGER_DUPLICATE_DISTANCE = 1.2
+DANGER_DUPLICATE_DISTANCE = 1.5
 
 # 산불 근처 waypoint는 순찰하지 않기 위한 거리
-DANGER_WAYPOINT_SKIP_DISTANCE = 1.5
+DANGER_WAYPOINT_SKIP_DISTANCE = 3.2
+
+# goal이 안전해도 Nav2 경로가 산불 옆을 스치면 해당 goal을 버림
+DANGER_PATH_SKIP_DISTANCE = 3.0
 
 # 로봇이 산불에 이 거리보다 가까워지면 즉시 현재 goal 취소
-DANGER_TOO_CLOSE_DISTANCE = 1.8
+DANGER_TOO_CLOSE_DISTANCE = 3.0
 
 # 산불 발견 시 현재 goal을 취소해서 재계획 유도
 CANCEL_GOAL_ON_DANGER = True
@@ -77,10 +114,14 @@ FREE_THRESHOLD = 20
 UNKNOWN_AS_BLOCKED = True
 
 # 산불 감지로 인한 goal 취소는 너무 자주 하지 않도록 제한
-DANGER_CANCEL_COOLDOWN_SEC = 8.0
+DANGER_CANCEL_COOLDOWN_SEC = 2.0
 
 # 산불 근접 경고도 너무 자주 취소하지 않도록 제한
-DANGER_PROXIMITY_CANCEL_COOLDOWN_SEC = 8.0
+DANGER_PROXIMITY_CANCEL_COOLDOWN_SEC = 2.0
+
+# thermal image만으로 판단한 강한 위험 신호의 goal 취소 제한
+# RED_ONLY는 위치 확정 전 후보로만 보고 여기서는 goal을 취소하지 않음
+THERMAL_DANGER_CANCEL_COOLDOWN_SEC = 12.0
 
 
 def create_pose(navigator, x, y, yaw=0.0):
@@ -107,6 +148,12 @@ def distance_2d(a, b):
     return math.sqrt((ax - bx) ** 2 + (ay - by) ** 2)
 
 
+def yaw_from_quaternion(q):
+    siny_cosp = 2.0 * (q.w * q.z + q.x * q.y)
+    cosy_cosp = 1.0 - 2.0 * (q.y * q.y + q.z * q.z)
+    return math.atan2(siny_cosp, cosy_cosp)
+
+
 class MapExplorationPatrol(BasicNavigator):
     def __init__(self):
         super().__init__()
@@ -116,21 +163,33 @@ class MapExplorationPatrol(BasicNavigator):
         self.patrol_waypoints = []
 
         self.current_robot_position = None
+        self.current_robot_yaw = 0.0
 
         self.discovered_survivors = []
         self.found_all_survivors = False
 
-        self.discovered_dangers = []
+        self.discovered_dangers = list(KNOWN_DANGER_POINTS)
+        self.visited_patrol_points = []
+        self.dropped_patrol_points = []
         self.danger_detected_during_current_goal = False
         self.too_close_to_danger = False
         self.cancel_requested = False
 
         self.last_danger_cancel_time = 0.0
         self.last_proximity_cancel_time = 0.0
+        self.last_thermal_cancel_time = 0.0
 
         map_qos = QoSProfile(depth=1)
         map_qos.durability = DurabilityPolicy.TRANSIENT_LOCAL
         map_qos.reliability = ReliabilityPolicy.RELIABLE
+
+        amcl_qos = QoSProfile(depth=1)
+        amcl_qos.durability = DurabilityPolicy.TRANSIENT_LOCAL
+        amcl_qos.reliability = ReliabilityPolicy.RELIABLE
+
+        detected_point_qos = QoSProfile(depth=10)
+        detected_point_qos.durability = DurabilityPolicy.TRANSIENT_LOCAL
+        detected_point_qos.reliability = ReliabilityPolicy.RELIABLE
 
         self.create_subscription(
             OccupancyGrid,
@@ -143,20 +202,27 @@ class MapExplorationPatrol(BasicNavigator):
             PoseWithCovarianceStamped,
             "/amcl_pose",
             self.amcl_pose_callback,
-            10,
+            amcl_qos,
         )
 
         self.create_subscription(
             PointStamped,
             "/detected_survivor_points",
             self.survivor_callback,
-            10,
+            detected_point_qos,
         )
 
         self.create_subscription(
             PointStamped,
             "/detected_danger_points",
             self.danger_callback,
+            detected_point_qos,
+        )
+
+        self.create_subscription(
+            String,
+            "/thermal_color_detection",
+            self.thermal_detection_callback,
             10,
         )
 
@@ -286,6 +352,8 @@ class MapExplorationPatrol(BasicNavigator):
         if len(ordered_waypoints) > MAX_PATROL_WAYPOINTS:
             ordered_waypoints = ordered_waypoints[:MAX_PATROL_WAYPOINTS]
 
+        ordered_waypoints = self.prioritize_survivor_viewpoints(ordered_waypoints)
+
         print(f"Coverage-selected waypoints: {len(selected_waypoints)}")
         print(f"After distance filtering: {len(spaced_waypoints)}")
         print(f"Generated patrol waypoints: {len(ordered_waypoints)}")
@@ -295,6 +363,30 @@ class MapExplorationPatrol(BasicNavigator):
             print(f"{i}: ({point[0]:.2f}, {point[1]:.2f})")
 
         return ordered_waypoints
+
+    def prioritize_survivor_viewpoints(self, waypoints):
+        priority_points = []
+        remaining_points = waypoints.copy()
+
+        for target_point in PRIORITY_SURVIVOR_VIEWPOINTS:
+            nearest_point = None
+            nearest_distance = float("inf")
+
+            for point in remaining_points:
+                distance = distance_2d(point, target_point)
+
+                if distance < nearest_distance:
+                    nearest_distance = distance
+                    nearest_point = point
+
+            if (
+                nearest_point is not None
+                and nearest_distance <= PRIORITY_VIEWPOINT_MATCH_DISTANCE
+            ):
+                priority_points.append(nearest_point)
+                remaining_points.remove(nearest_point)
+
+        return priority_points + remaining_points
 
     def select_coverage_waypoints(self, raw_waypoints):
         if not raw_waypoints:
@@ -451,6 +543,7 @@ class MapExplorationPatrol(BasicNavigator):
 
         if self.current_robot_position is None:
             current = remaining.pop(0)
+            ordered.append(current)
         else:
             current = self.current_robot_position
 
@@ -528,6 +621,7 @@ class MapExplorationPatrol(BasicNavigator):
         y = msg.pose.pose.position.y
 
         self.current_robot_position = (x, y)
+        self.current_robot_yaw = yaw_from_quaternion(msg.pose.pose.orientation)
 
         if not self.is_robot_too_close_to_danger():
             return
@@ -643,6 +737,112 @@ class MapExplorationPatrol(BasicNavigator):
 
         return False
 
+    def is_path_near_danger(self, path):
+        if path is None:
+            return False, None, None
+
+        for pose in path.poses:
+            path_point = (
+                pose.pose.position.x,
+                pose.pose.position.y,
+            )
+
+            for danger_point in self.discovered_dangers:
+                distance = distance_2d(path_point, danger_point)
+
+                if distance < DANGER_PATH_SKIP_DISTANCE:
+                    return True, danger_point, distance
+
+        return False, None, None
+
+    def is_waypoint_in_replan_drop_zone(self, point):
+        for danger_point in self.discovered_dangers:
+            if distance_2d(point, danger_point) < REPLAN_DROP_DISTANCE_FROM_DANGER:
+                return True
+
+        if self.current_robot_position is not None:
+            if (
+                distance_2d(point, self.current_robot_position)
+                < REPLAN_DROP_DISTANCE_FROM_ROBOT
+            ):
+                return True
+
+        return False
+
+    def is_waypoint_near_visited_area(self, point):
+        for visited_point in self.visited_patrol_points:
+            if distance_2d(point, visited_point) < VISITED_WAYPOINT_SKIP_DISTANCE:
+                return True
+
+        return False
+
+    def mark_patrol_point_done(self, point, reason):
+        if reason == "reached":
+            self.visited_patrol_points.append(point)
+        else:
+            self.dropped_patrol_points.append(point)
+
+    def should_skip_patrol_point(self, point):
+        if self.is_waypoint_near_danger(point):
+            return True, "near detected danger"
+
+        if self.is_waypoint_near_visited_area(point):
+            return True, "near already searched area"
+
+        return False, ""
+
+    def remove_now_unsafe_or_redundant_waypoints(self, waypoints):
+        kept = []
+        removed_count = 0
+
+        for point in waypoints:
+            should_skip, _ = self.should_skip_patrol_point(point)
+
+            if should_skip:
+                self.mark_patrol_point_done(point, "filtered")
+                removed_count += 1
+            else:
+                kept.append(point)
+
+        if removed_count > 0:
+            print(
+                f"Filtered {removed_count} waypoint(s) that are now unsafe "
+                f"or already searched."
+            )
+
+        return kept
+
+    def thermal_detection_callback(self, msg):
+        detection = msg.data
+
+        if detection == "NONE":
+            return
+
+        if detection.startswith("RED_ONLY"):
+            return
+
+        if not (
+            detection.startswith("FIRE")
+            or detection.startswith("HEAT_UNKNOWN")
+        ):
+            return
+
+        now = time.time()
+
+        if now - self.last_thermal_cancel_time < THERMAL_DANGER_CANCEL_COOLDOWN_SEC:
+            return
+
+        self.last_thermal_cancel_time = now
+        self.danger_detected_during_current_goal = True
+        self.cancel_requested = True
+
+        print(f"\n[Thermal danger detected] {detection}")
+        print("Confirmed thermal danger. Canceling current goal to replan...")
+
+        # thermal topic에는 map 좌표가 없으므로 현재 로봇 위치를 danger로 저장하지 않는다.
+        # 자기 위치를 danger로 등록하면 AMCL callback에서 즉시 근접 위험으로 판단되어
+        # 다음 회피 goal까지 계속 취소되는 루프가 생길 수 있다.
+
     # ============================================================
     # Navigation
     # ============================================================
@@ -667,7 +867,7 @@ class MapExplorationPatrol(BasicNavigator):
                     self.cancelTask()
                     return TaskResult.CANCELED, last_distance_remaining
 
-            if self.found_all_survivors:
+            if self.found_all_survivors and not ignore_danger_cancel:
                 return TaskResult.CANCELED, last_distance_remaining
 
             if not ignore_danger_cancel:
@@ -716,11 +916,41 @@ class MapExplorationPatrol(BasicNavigator):
                 f"\nSkipping {label}: ({x:.2f}, {y:.2f}) "
                 f"because it is near detected danger."
             )
-            return False
+            return False, "near_danger"
 
         print(f"\nMoving to {label}: ({x:.2f}, {y:.2f})")
 
-        goal_pose = create_pose(self, x, y)
+        goal_yaw = self.get_goal_yaw(point)
+        goal_pose = create_pose(self, x, y, goal_yaw)
+
+        if label != "exit" and self.current_robot_position is not None:
+            start_pose = create_pose(
+                self,
+                self.current_robot_position[0],
+                self.current_robot_position[1],
+                self.current_robot_yaw,
+            )
+            planned_path = self.getPath(start_pose, goal_pose, use_start=True)
+            if planned_path is None:
+                print(
+                    f"\nSkipping {label}: ({x:.2f}, {y:.2f}) "
+                    "because Nav2 could not compute a safe path."
+                )
+                return False, "path_failed"
+
+            is_unsafe_path, danger_point, danger_distance = self.is_path_near_danger(
+                planned_path
+            )
+
+            if is_unsafe_path:
+                print(
+                    f"\nSkipping {label}: ({x:.2f}, {y:.2f}) "
+                    f"because the planned path passes too close to wildfire "
+                    f"at ({danger_point[0]:.2f}, {danger_point[1]:.2f}) "
+                    f"with clearance {danger_distance:.2f} m."
+                )
+                return False, "near_danger_path"
+
         self.goToPose(goal_pose)
 
         ignore_danger_cancel = label == "exit"
@@ -730,15 +960,15 @@ class MapExplorationPatrol(BasicNavigator):
         )
 
         if self.found_all_survivors and label != "exit":
-            return False
+            return False, "survivors_found"
 
         if self.danger_detected_during_current_goal and label != "exit":
             print("Current goal was canceled because danger was detected.")
-            return False
+            return False, "danger_detected"
 
         if self.too_close_to_danger and label != "exit":
             print("Current goal was canceled because robot got too close to danger.")
-            return False
+            return False, "too_close_to_danger"
 
         reached = self.is_goal_accepted(
             result,
@@ -748,14 +978,46 @@ class MapExplorationPatrol(BasicNavigator):
 
         if reached:
             print(f"Reached {label}: ({x:.2f}, {y:.2f})")
-            return True
+            return True, "reached"
 
         if result == TaskResult.CANCELED:
             print(f"Navigation canceled while moving to {label}: ({x:.2f}, {y:.2f})")
+            return False, "canceled"
         elif result == TaskResult.FAILED:
             print(f"Failed to reach {label}: ({x:.2f}, {y:.2f})")
+            return False, "failed"
         else:
             print(f"Unknown result while moving to {label}: ({x:.2f}, {y:.2f})")
+            return False, "unknown"
+
+    def get_goal_yaw(self, point):
+        nearest_survivor = None
+        nearest_distance = float("inf")
+
+        for survivor_point in KNOWN_SURVIVOR_POINTS:
+            if self.is_survivor_already_found(survivor_point):
+                continue
+
+            distance = distance_2d(point, survivor_point)
+
+            if distance < nearest_distance:
+                nearest_distance = distance
+                nearest_survivor = survivor_point
+
+        if (
+            nearest_survivor is not None
+            and nearest_distance <= SURVIVOR_INSPECTION_DISTANCE
+        ):
+            dx = nearest_survivor[0] - point[0]
+            dy = nearest_survivor[1] - point[1]
+            return math.atan2(dy, dx)
+
+        return 0.0
+
+    def is_survivor_already_found(self, survivor_point):
+        for found_point in self.discovered_survivors:
+            if distance_2d(found_point, survivor_point) < SURVIVOR_DUPLICATE_DISTANCE:
+                return True
 
         return False
 
@@ -793,8 +1055,7 @@ class MapExplorationPatrol(BasicNavigator):
         print(f"Total patrol waypoints: {len(self.patrol_waypoints)}")
         print(f"Exit point: ({EXIT_POINT[0]:.2f}, {EXIT_POINT[1]:.2f})")
 
-        # 핵심 변경:
-        # 기존처럼 index를 순환시키지 않고, 미방문 waypoint를 하나씩 제거하면서 진행
+        # 생성 단계에서 이미 backtracking을 줄인 순서로 정렬했으므로 그 순서를 유지한다.
         unvisited_waypoints = self.patrol_waypoints.copy()
         visited_count = 0
 
@@ -803,33 +1064,34 @@ class MapExplorationPatrol(BasicNavigator):
                 print("All survivors found. Leaving patrol loop.")
                 break
 
-            # 현재 위치 기준 가장 가까운 미방문 waypoint를 선택
-            if self.current_robot_position is not None:
-                next_point = min(
-                    unvisited_waypoints,
-                    key=lambda p: distance_2d(self.current_robot_position, p),
-                )
-            else:
-                next_point = unvisited_waypoints[0]
+            unvisited_waypoints = self.remove_now_unsafe_or_redundant_waypoints(
+                unvisited_waypoints
+            )
 
-            unvisited_waypoints.remove(next_point)
-            visited_count += 1
+            if not unvisited_waypoints:
+                break
+
+            next_point = unvisited_waypoints[0]
 
             label = (
-                f"patrol waypoint {visited_count}/"
+                f"patrol waypoint {visited_count + 1}/"
                 f"{len(self.patrol_waypoints)}"
             )
 
-            # 산불 근처 waypoint는 가지 않고 바로 버림
-            if self.is_waypoint_near_danger(next_point):
+            should_skip, skip_reason = self.should_skip_patrol_point(next_point)
+
+            if should_skip:
                 print(
                     f"\nSkipping {label}: "
                     f"({next_point[0]:.2f}, {next_point[1]:.2f}) "
-                    f"because it is near detected danger."
+                    f"because it is {skip_reason}."
                 )
+                unvisited_waypoints.pop(0)
+                self.mark_patrol_point_done(next_point, "skipped")
+                visited_count += 1
                 continue
 
-            reached = self.go_to_single_goal(
+            reached, reason = self.go_to_single_goal(
                 next_point,
                 label,
                 NORMAL_CLOSE_ENOUGH_DISTANCE,
@@ -839,7 +1101,31 @@ class MapExplorationPatrol(BasicNavigator):
                 print("All survivors found during current goal. Going to exit now.")
                 break
 
-            if not reached:
+            if reached:
+                unvisited_waypoints.pop(0)
+                self.mark_patrol_point_done(next_point, "reached")
+                visited_count += 1
+            elif reason in ("near_danger", "near_danger_path", "path_failed", "failed"):
+                unvisited_waypoints.pop(0)
+                self.mark_patrol_point_done(next_point, reason)
+                visited_count += 1
+                print("Dropping unreachable or unsafe waypoint.")
+            elif reason in ("danger_detected", "too_close_to_danger"):
+                postponed_point = unvisited_waypoints.pop(0)
+                if self.is_waypoint_in_replan_drop_zone(postponed_point):
+                    self.mark_patrol_point_done(postponed_point, reason)
+                    visited_count += 1
+                    print(
+                        "Dropping current waypoint after danger replanning "
+                        "because it is near danger or already effectively searched."
+                    )
+                else:
+                    unvisited_waypoints.append(postponed_point)
+                    print("Postponing current waypoint after danger replanning.")
+            else:
+                unvisited_waypoints.pop(0)
+                self.mark_patrol_point_done(next_point, reason)
+                visited_count += 1
                 print("Skipping or replanning from unreachable/danger waypoint.")
 
             print(
@@ -862,7 +1148,7 @@ class MapExplorationPatrol(BasicNavigator):
         self.too_close_to_danger = False
         self.cancel_requested = False
 
-        exit_reached = self.go_to_single_goal(
+        exit_reached, _ = self.go_to_single_goal(
             EXIT_POINT,
             "exit",
             EXIT_CLOSE_ENOUGH_DISTANCE,

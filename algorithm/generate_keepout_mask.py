@@ -14,7 +14,13 @@ SDF_PATH = BASE_DIR / "maps" / "maze.sdf"
 OUTPUT_MASK_PGM = BASE_DIR / "maps" / "danger_keepout_mask.pgm"
 OUTPUT_MASK_YAML = BASE_DIR / "maps" / "danger_keepout_mask.yaml"
 
-KEEP_OUT_RADIUS_M = 0.8
+KEEP_OUT_RADIUS_M = 2.5
+
+WORLD_TO_MAP_A = (
+    (0.94706522, 0.32869565),
+    (-0.33073370, 0.94217391),
+)
+WORLD_TO_MAP_T = (-0.10391304, -1.73847826)
 
 
 def read_color_from_model(model):
@@ -82,6 +88,14 @@ def load_danger_points_from_sdf(sdf_path):
         danger_points.append(pose)
 
     return danger_points
+
+
+def transform_world_to_map(point):
+    x, y = point
+    map_x = WORLD_TO_MAP_A[0][0] * x + WORLD_TO_MAP_A[0][1] * y + WORLD_TO_MAP_T[0]
+    map_y = WORLD_TO_MAP_A[1][0] * x + WORLD_TO_MAP_A[1][1] * y + WORLD_TO_MAP_T[1]
+
+    return map_x, map_y
 
 
 def get_map_image_path(map_yaml):
@@ -165,9 +179,10 @@ def main():
     origin_y = float(origin[1])
 
     width, height = get_map_image_size(map_yaml)
-    danger_points = load_danger_points_from_sdf(SDF_PATH)
+    sdf_danger_points = load_danger_points_from_sdf(SDF_PATH)
+    danger_points = [transform_world_to_map(point) for point in sdf_danger_points]
 
-    if not danger_points:
+    if not sdf_danger_points:
         print("No danger points found.")
         return
 
@@ -178,7 +193,8 @@ def main():
     print("Map size:", width, height)
     print("Resolution:", resolution)
     print("Origin:", origin)
-    print("Danger points:", danger_points)
+    print("SDF danger points:", sdf_danger_points)
+    print("Map-frame danger points:", danger_points)
     print("Keepout radius:", KEEP_OUT_RADIUS_M, "m")
     print("Keepout radius:", radius_px, "px")
 
