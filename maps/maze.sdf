@@ -583,7 +583,7 @@
                         <emissive>1 0.10 0.005 1</emissive>
                     </material>
                 </visual>
-                <visual name="flame_outer">
+                <!-- <visual name="flame_outer">
                     <transparency>0.18</transparency>
                     <pose>0 0 1.05 0 0 0</pose>
                     <geometry>
@@ -687,8 +687,8 @@
                         <diffuse>1 0.16 0.010 0.86</diffuse>
                         <emissive>1 0.10 0.006 1</emissive>
                     </material>
-                </visual>
-                <visual name="smoke_column">
+                </visual> -->
+                <!-- <visual name="smoke_column">
                     <transparency>0.88</transparency>
                     <pose>0 0 2.35 0 0 0</pose>
                     <geometry>
@@ -750,7 +750,7 @@
                     <min_velocity>0.18</min_velocity>
                     <max_velocity>0.70</max_velocity>
                     <scale_rate>0.55</scale_rate>
-                    <rate>42</rate>
+                    <rate>15</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
@@ -760,7 +760,7 @@
                             </metal>
                         </pbr>
                     </material>
-                    <color_range_image>/home/seohyein/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
+                    <color_range_image>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
                     <particle_scatter_ratio>0.98</particle_scatter_ratio>
                 </particle_emitter>
                 <particle_emitter name="smoke_canopy" type="ellipsoid">
@@ -772,19 +772,19 @@
                     <min_velocity>0.05</min_velocity>
                     <max_velocity>0.28</max_velocity>
                     <scale_rate>0.45</scale_rate>
-                    <rate>18</rate>
+                    <rate>5</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
                         <pbr>
                             <metal>
-                                <albedo_map>/home/seohyein/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
+                                <albedo_map>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
                             </metal>
                         </pbr>
                     </material>
-                    <color_range_image>/home/seohyein/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
+                    <color_range_image>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
                     <particle_scatter_ratio>0.92</particle_scatter_ratio>
-                </particle_emitter>
+                </particle_emitter> -->
                 <collision name="c">
                     <geometry>
                         <cylinder>
@@ -1021,17 +1021,17 @@
                     <min_velocity>0.16</min_velocity>
                     <max_velocity>0.78</max_velocity>
                     <scale_rate>0.58</scale_rate>
-                    <rate>140</rate>
+                    <rate>20</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
                         <pbr>
                             <metal>
-                                <albedo_map>/home/seohyein/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
+                                <albedo_map>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
                             </metal>
                         </pbr>
                     </material>
-                    <color_range_image>/home/seohyein/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
+                    <color_range_image>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
                     <particle_scatter_ratio>0.98</particle_scatter_ratio>
                 </particle_emitter>
                 <particle_emitter name="smoke_canopy" type="ellipsoid">
@@ -1043,17 +1043,17 @@
                     <min_velocity>0.05</min_velocity>
                     <max_velocity>0.30</max_velocity>
                     <scale_rate>0.48</scale_rate>
-                    <rate>55</rate>
+                    <rate>8</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
                         <pbr>
                             <metal>
-                                <albedo_map>/home/seohyein/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
+                                <albedo_map>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
                             </metal>
                         </pbr>
                     </material>
-                    <color_range_image>/home/seohyein/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
+                    <color_range_image>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
                     <particle_scatter_ratio>0.94</particle_scatter_ratio>
                 </particle_emitter>
                 <collision name="c"><geometry><cylinder><radius>0.73</radius><length>1.0</length></cylinder></geometry></collision>
@@ -1284,17 +1284,17 @@
                     <min_velocity>0.16</min_velocity>
                     <max_velocity>0.78</max_velocity>
                     <scale_rate>0.58</scale_rate>
-                    <rate>140</rate>
+                    <rate>20</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
                         <pbr>
                             <metal>
-                                <albedo_map>/home/seohyein/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
+                                <albedo_map>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
                             </metal>
                         </pbr>
                     </material>
-                    <color_range_image>/home/seohyein/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
+                    <color_range_image>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
                     <particle_scatter_ratio>0.98</particle_scatter_ratio>
                 </particle_emitter>
                 <particle_emitter name="smoke_canopy" type="ellipsoid">
@@ -1306,17 +1306,17 @@
                     <min_velocity>0.05</min_velocity>
                     <max_velocity>0.30</max_velocity>
                     <scale_rate>0.48</scale_rate>
-                    <rate>55</rate>
+                    <rate>8</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
                         <pbr>
                             <metal>
-                                <albedo_map>/home/seohyein/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
+                                <albedo_map>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
                             </metal>
                         </pbr>
                     </material>
-                    <color_range_image>/home/seohyein/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
+                    <color_range_image>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
                     <particle_scatter_ratio>0.94</particle_scatter_ratio>
                 </particle_emitter>
                 <collision name="c"><geometry><cylinder><radius>0.73</radius><length>1.0</length></cylinder></geometry></collision>
@@ -1547,17 +1547,17 @@
                     <min_velocity>0.16</min_velocity>
                     <max_velocity>0.78</max_velocity>
                     <scale_rate>0.58</scale_rate>
-                    <rate>140</rate>
+                    <rate>20</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
                         <pbr>
                             <metal>
-                                <albedo_map>/home/seohyein/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
+                                <albedo_map>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
                             </metal>
                         </pbr>
                     </material>
-                    <color_range_image>/home/seohyein/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
+                    <color_range_image>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
                     <particle_scatter_ratio>0.98</particle_scatter_ratio>
                 </particle_emitter>
                 <particle_emitter name="smoke_canopy" type="ellipsoid">
@@ -1569,17 +1569,17 @@
                     <min_velocity>0.05</min_velocity>
                     <max_velocity>0.30</max_velocity>
                     <scale_rate>0.48</scale_rate>
-                    <rate>55</rate>
+                    <rate>8</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
                         <pbr>
                             <metal>
-                                <albedo_map>/home/seohyein/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
+                                <albedo_map>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
                             </metal>
                         </pbr>
                     </material>
-                    <color_range_image>/home/seohyein/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
+                    <color_range_image>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
                     <particle_scatter_ratio>0.94</particle_scatter_ratio>
                 </particle_emitter>
                 <collision name="c"><geometry><cylinder><radius>0.73</radius><length>1.0</length></cylinder></geometry></collision>
@@ -1625,17 +1625,17 @@
                     <min_velocity>0.02</min_velocity>
                     <max_velocity>0.16</max_velocity>
                     <scale_rate>0.20</scale_rate>
-                    <rate>35</rate>
+                    <rate>5</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
                         <pbr>
                             <metal>
-                                <albedo_map>/home/seohyein/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
+                                <albedo_map>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
                             </metal>
                         </pbr>
                     </material>
-                    <color_range_image>/home/seohyein/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
+                    <color_range_image>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
                     <particle_scatter_ratio>0.80</particle_scatter_ratio>
                 </particle_emitter>
             </link>
@@ -1653,17 +1653,17 @@
                     <min_velocity>0.02</min_velocity>
                     <max_velocity>0.16</max_velocity>
                     <scale_rate>0.20</scale_rate>
-                    <rate>45</rate>
+                    <rate>5</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
                         <pbr>
                             <metal>
-                                <albedo_map>/home/seohyein/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
+                                <albedo_map>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_particle.png</albedo_map>
                             </metal>
                         </pbr>
                     </material>
-                    <color_range_image>/home/seohyein/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
+                    <color_range_image>/home/seoeunbi/ros2/Track-Be/maps/materials/textures/smoke_colors.png</color_range_image>
                     <particle_scatter_ratio>0.82</particle_scatter_ratio>
                 </particle_emitter>
             </link>
