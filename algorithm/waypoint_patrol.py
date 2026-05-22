@@ -56,12 +56,9 @@ def is_goal_accepted(result, last_distance_remaining, allowed_distance, is_rescu
     if result == TaskResult.SUCCEEDED:
         return True
 
-    # 구조자 접근 지점은 Nav2 FAILED를 성공으로 인정하지 않음
-    # 구조자는 확실히 도착해야 rescued_count 증가
     if is_rescue_goal:
         return False
 
-    # 일반 waypoint와 최종 출구는 충분히 가까우면 성공 처리
     if result == TaskResult.FAILED:
         return (
             last_distance_remaining is not None
@@ -95,7 +92,6 @@ def main():
         max_gap=3,
     )
 
-    # 첫 좌표는 현재 로봇 시작 위치이므로 제거
     if waypoints:
         waypoints = waypoints[1:]
 
