@@ -22,7 +22,12 @@ REQUIRED_SURVIVOR_COUNT = 3
 # maze.sdf 기준:
 # 외곽은 대략 x=-10~10, y=-10~10
 # 동쪽 벽이 아래쪽 전체를 막지 않기 때문에 오른쪽 아래를 출구 접근점으로 사용
-EXIT_POINT = (8, -8)
+EXIT_CANDIDATES = [
+    (8.0, -8.0),
+    (7.5, -8.0),
+    (8.0, -7.5),
+    (7.5, -7.5),
+]
 
 # /map에서 waypoint를 생성할 순찰 범위
 # 외곽 벽과 너무 붙지 않도록 -9~9로 제한
@@ -50,7 +55,7 @@ DIRECTION_WEIGHT = 1.2
 SAFE_MARGIN_M = 0.40
 
 # 구조자 중복 인식 방지 거리
-SURVIVOR_DUPLICATE_DISTANCE = 2.5
+SURVIVOR_DUPLICATE_DISTANCE = 4
 
 # 산불/위험 구역 중복 인식 방지 거리
 DANGER_DUPLICATE_DISTANCE = 1.2
@@ -791,7 +796,7 @@ class MapExplorationPatrol(BasicNavigator):
         print("\nExploration patrol started.")
         print(f"Required survivors: {REQUIRED_SURVIVOR_COUNT}")
         print(f"Total patrol waypoints: {len(self.patrol_waypoints)}")
-        print(f"Exit point: ({EXIT_POINT[0]:.2f}, {EXIT_POINT[1]:.2f})")
+        print(f"Exit candidates: {EXIT_CANDIDATES}")
 
         # 핵심 변경:
         # 기존처럼 index를 순환시키지 않고, 미방문 waypoint를 하나씩 제거하면서 진행
@@ -854,19 +859,39 @@ class MapExplorationPatrol(BasicNavigator):
             print("Mission failed: not enough survivors detected.")
             print("All generated patrol waypoints were already visited or skipped.")
             return
-
         print("\nMoving to final exit...")
 
-        self.found_all_survivors = False
-        self.danger_detected_during_current_goal = False
-        self.too_close_to_danger = False
-        self.cancel_requested = False
+        exit_reached = False
 
-        exit_reached = self.go_to_single_goal(
-            EXIT_POINT,
-            "exit",
-            EXIT_CLOSE_ENOUGH_DISTANCE,
-        )
+        for i, exit_point in enumerate(EXIT_CANDIDATES, start=1):
+            print(
+                f"\nTrying exit candidate {i}/{len(EXIT_CANDIDATES)}: "
+                f"({exit_point[0]:.2f}, {exit_point[1]:.2f})"
+            )
+
+            self.found_all_survivors = False
+            self.danger_detected_during_current_goal = False
+            self.too_close_to_danger = False
+            self.cancel_requested = False
+
+            print("Clearing costmaps before exit attempt...")
+            self.clearAllCostmaps()
+
+            wait_start = time.time()
+            while rclpy.ok() and time.time() - wait_start < 1.0:
+                rclpy.spin_once(self, timeout_sec=0.1)
+
+            exit_reached = self.go_to_single_goal(
+                exit_point,
+                "exit",
+                EXIT_CLOSE_ENOUGH_DISTANCE,
+            )
+
+            if exit_reached:
+                print(f"Exit reached using candidate {i}.")
+                break
+
+            print(f"Exit candidate {i} failed. Trying next candidate...")
 
         print("\nNavigation finished.")
 
