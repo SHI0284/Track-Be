@@ -738,7 +738,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_column">
-                    <transparency>0.70</transparency>
+                    <transparency>0.88</transparency>
                     <pose>0 0 2.35 0 0 0</pose>
                     <geometry>
                         <cylinder>
@@ -752,7 +752,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_puff_low">
-                    <transparency>0.72</transparency>
+                    <transparency>0.90</transparency>
                     <pose>-0.18 0.12 1.95 0 0 0</pose>
                     <geometry>
                         <sphere>
@@ -765,7 +765,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_puff_mid">
-                    <transparency>0.76</transparency>
+                    <transparency>0.92</transparency>
                     <pose>0.30 -0.10 2.55 0 0 0</pose>
                     <geometry>
                         <sphere>
@@ -778,7 +778,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_puff_high">
-                    <transparency>0.80</transparency>
+                    <transparency>0.94</transparency>
                     <pose>-0.08 0.24 3.15 0 0 0</pose>
                     <geometry>
                         <sphere>
@@ -794,12 +794,12 @@
                     <pose>0 0 1.55 0 -1.5707 0</pose>
                     <emitting>true</emitting>
                     <size>0.75 0.75 0.35</size>
-                    <particle_size>1.0 1.0 1.0</particle_size>
-                    <lifetime>9.0</lifetime>
+                    <particle_size>0.65 0.65 0.65</particle_size>
+                    <lifetime>5.5</lifetime>
                     <min_velocity>0.18</min_velocity>
                     <max_velocity>0.70</max_velocity>
                     <scale_rate>0.55</scale_rate>
-                    <rate>110</rate>
+                    <rate>42</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
@@ -816,12 +816,12 @@
                     <pose>0.15 -0.05 3.0 0 -1.5707 0</pose>
                     <emitting>true</emitting>
                     <size>1.6 1.6 0.7</size>
-                    <particle_size>1.3 1.3 1.3</particle_size>
-                    <lifetime>12.0</lifetime>
+                    <particle_size>0.85 0.85 0.85</particle_size>
+                    <lifetime>7.0</lifetime>
                     <min_velocity>0.05</min_velocity>
                     <max_velocity>0.28</max_velocity>
                     <scale_rate>0.45</scale_rate>
-                    <rate>45</rate>
+                    <rate>18</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
@@ -1008,7 +1008,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_column">
-                    <transparency>0.70</transparency>
+                    <transparency>0.88</transparency>
                     <pose>0 0 2.65 0 0 0</pose>
                     <geometry>
                         <cylinder>
@@ -1022,7 +1022,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_puff_low">
-                    <transparency>0.72</transparency>
+                    <transparency>0.90</transparency>
                     <pose>-0.22 0.16 2.12 0 0 0</pose>
                     <geometry>
                         <sphere>
@@ -1035,7 +1035,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_puff_mid">
-                    <transparency>0.76</transparency>
+                    <transparency>0.92</transparency>
                     <pose>0.36 -0.12 2.85 0 0 0</pose>
                     <geometry>
                         <sphere>
@@ -1048,7 +1048,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_puff_high">
-                    <transparency>0.80</transparency>
+                    <transparency>0.94</transparency>
                     <pose>-0.10 0.30 3.55 0 0 0</pose>
                     <geometry>
                         <sphere>
@@ -1064,12 +1064,12 @@
                     <pose>0 0 1.75 0 -1.5707 0</pose>
                     <emitting>true</emitting>
                     <size>1.15 1.15 0.38</size>
-                    <particle_size>1.15 1.15 1.15</particle_size>
-                    <lifetime>10.5</lifetime>
+                    <particle_size>0.75 0.75 0.75</particle_size>
+                    <lifetime>6.0</lifetime>
                     <min_velocity>0.16</min_velocity>
                     <max_velocity>0.78</max_velocity>
                     <scale_rate>0.58</scale_rate>
-                    <rate>140</rate>
+                    <rate>22</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
@@ -1086,12 +1086,12 @@
                     <pose>0.2 -0.1 3.25 0 -1.5707 0</pose>
                     <emitting>true</emitting>
                     <size>2.2 2.2 0.85</size>
-                    <particle_size>1.5 1.5 1.5</particle_size>
-                    <lifetime>13.0</lifetime>
+                    <particle_size>0.95 0.95 0.95</particle_size>
+                    <lifetime>7.5</lifetime>
                     <min_velocity>0.05</min_velocity>
                     <max_velocity>0.30</max_velocity>
                     <scale_rate>0.48</scale_rate>
-                    <rate>55</rate>
+                    <rate>22</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
@@ -1278,7 +1278,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_column">
-                    <transparency>0.70</transparency>
+                    <transparency>0.88</transparency>
                     <pose>0 0 2.65 0 0 0</pose>
                     <geometry>
                         <cylinder>
@@ -1292,7 +1292,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_puff_low">
-                    <transparency>0.72</transparency>
+                    <transparency>0.90</transparency>
                     <pose>-0.22 0.16 2.12 0 0 0</pose>
                     <geometry>
                         <sphere>
@@ -1305,7 +1305,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_puff_mid">
-                    <transparency>0.76</transparency>
+                    <transparency>0.92</transparency>
                     <pose>0.36 -0.12 2.85 0 0 0</pose>
                     <geometry>
                         <sphere>
@@ -1318,7 +1318,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_puff_high">
-                    <transparency>0.80</transparency>
+                    <transparency>0.94</transparency>
                     <pose>-0.10 0.30 3.55 0 0 0</pose>
                     <geometry>
                         <sphere>
@@ -1334,12 +1334,12 @@
                     <pose>0 0 1.75 0 -1.5707 0</pose>
                     <emitting>true</emitting>
                     <size>1.15 1.15 0.38</size>
-                    <particle_size>1.15 1.15 1.15</particle_size>
-                    <lifetime>10.5</lifetime>
+                    <particle_size>0.75 0.75 0.75</particle_size>
+                    <lifetime>6.0</lifetime>
                     <min_velocity>0.16</min_velocity>
                     <max_velocity>0.78</max_velocity>
                     <scale_rate>0.58</scale_rate>
-                    <rate>140</rate>
+                    <rate>22</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
@@ -1356,12 +1356,12 @@
                     <pose>0.2 -0.1 3.25 0 -1.5707 0</pose>
                     <emitting>true</emitting>
                     <size>2.2 2.2 0.85</size>
-                    <particle_size>1.5 1.5 1.5</particle_size>
-                    <lifetime>13.0</lifetime>
+                    <particle_size>0.95 0.95 0.95</particle_size>
+                    <lifetime>7.5</lifetime>
                     <min_velocity>0.05</min_velocity>
                     <max_velocity>0.30</max_velocity>
                     <scale_rate>0.48</scale_rate>
-                    <rate>55</rate>
+                    <rate>22</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
@@ -1548,7 +1548,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_column">
-                    <transparency>0.70</transparency>
+                    <transparency>0.88</transparency>
                     <pose>0 0 2.65 0 0 0</pose>
                     <geometry>
                         <cylinder>
@@ -1562,7 +1562,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_puff_low">
-                    <transparency>0.72</transparency>
+                    <transparency>0.90</transparency>
                     <pose>-0.22 0.16 2.12 0 0 0</pose>
                     <geometry>
                         <sphere>
@@ -1575,7 +1575,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_puff_mid">
-                    <transparency>0.76</transparency>
+                    <transparency>0.92</transparency>
                     <pose>0.36 -0.12 2.85 0 0 0</pose>
                     <geometry>
                         <sphere>
@@ -1588,7 +1588,7 @@
                     </material>
                 </visual>
                 <visual name="smoke_puff_high">
-                    <transparency>0.80</transparency>
+                    <transparency>0.94</transparency>
                     <pose>-0.10 0.30 3.55 0 0 0</pose>
                     <geometry>
                         <sphere>
@@ -1604,12 +1604,12 @@
                     <pose>0 0 1.75 0 -1.5707 0</pose>
                     <emitting>true</emitting>
                     <size>1.15 1.15 0.38</size>
-                    <particle_size>1.15 1.15 1.15</particle_size>
-                    <lifetime>10.5</lifetime>
+                    <particle_size>0.75 0.75 0.75</particle_size>
+                    <lifetime>6.0</lifetime>
                     <min_velocity>0.16</min_velocity>
                     <max_velocity>0.78</max_velocity>
                     <scale_rate>0.58</scale_rate>
-                    <rate>140</rate>
+                    <rate>22</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
@@ -1626,12 +1626,12 @@
                     <pose>0.2 -0.1 3.25 0 -1.5707 0</pose>
                     <emitting>true</emitting>
                     <size>2.2 2.2 0.85</size>
-                    <particle_size>1.5 1.5 1.5</particle_size>
-                    <lifetime>13.0</lifetime>
+                    <particle_size>0.95 0.95 0.95</particle_size>
+                    <lifetime>7.5</lifetime>
                     <min_velocity>0.05</min_velocity>
                     <max_velocity>0.30</max_velocity>
                     <scale_rate>0.48</scale_rate>
-                    <rate>55</rate>
+                    <rate>22</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
@@ -2029,12 +2029,12 @@
                     <pose>0 0 0 0 -1.5707 0</pose>
                     <emitting>true</emitting>
                     <size>4.2 1.8 0.6</size>
-                    <particle_size>1.4 1.4 1.4</particle_size>
-                    <lifetime>10.0</lifetime>
+                    <particle_size>0.75 0.75 0.75</particle_size>
+                    <lifetime>5.0</lifetime>
                     <min_velocity>0.02</min_velocity>
                     <max_velocity>0.16</max_velocity>
                     <scale_rate>0.20</scale_rate>
-                    <rate>35</rate>
+                    <rate>10</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>
@@ -2058,12 +2058,12 @@
                     <pose>0 0 0 0 -1.5707 0</pose>
                     <emitting>true</emitting>
                     <size>5.4 2.2 0.6</size>
-                    <particle_size>1.4 1.4 1.4</particle_size>
-                    <lifetime>11.0</lifetime>
+                    <particle_size>0.75 0.75 0.75</particle_size>
+                    <lifetime>5.5</lifetime>
                     <min_velocity>0.02</min_velocity>
                     <max_velocity>0.16</max_velocity>
                     <scale_rate>0.20</scale_rate>
-                    <rate>45</rate>
+                    <rate>18</rate>
                     <material>
                         <diffuse>0.7 0.7 0.7 1</diffuse>
                         <specular>0.2 0.2 0.2 1</specular>

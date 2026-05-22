@@ -94,7 +94,7 @@ class ColorDetector(Node):
         return self.find_largest_blob(red_mask)
 
     def detect_green(self, hsv_image):
-        lower_green = np.array([40, 80, 80])
+        lower_green = np.array([40, 60, 30])
         upper_green = np.array([85, 255, 255])
 
         green_mask = cv2.inRange(hsv_image, lower_green, upper_green)
